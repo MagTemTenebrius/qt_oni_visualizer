@@ -8,7 +8,42 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_PREFIX_PATH "D:/Qt/Qt5.12.9/5.12.9/mingw73_32/lib/cmake")
+set(CMAKE_PREFIX_PATH "C:/Qt/Qt5.13.1/5.13.1/mingw73_32/lib/cmake")
+
+# -----------------------------------------------------------------------------
+# openNI
+INCLUDE_DIRECTORIES(${OPEN_NI_BASE}/Include)
+
+SET(LIBS ${LIBS} OpenNI2)
+
+GET_FILENAME_COMPONENT(OPEN_NI_LIBDIR "${OPEN_NI_LIBDIR}" ABSOLUTE)
+
+MESSAGE("OPEN_NI_BASE: ${OPEN_NI_BASE}")
+set(OPEN_NI_LIBDIR "C:/Program Files/OpenNI2/Lib")
+LINK_DIRECTORIES(${OPEN_NI_LIBDIR})
+MESSAGE("OPEN_NI_LIBDIR: ${OPEN_NI_LIBDIR}")
+
+# -----------------------------------------------------------------------------
+# NITE
+INCLUDE_DIRECTORIES(${NITE_BASE}/Include)
+MESSAGE("NITE_BASE include: ${NITE_BASE}/Include")
+
+IF(WIN32)
+    FIND_LIBRARY(NITE_LIBRARY NAMES ${OPEN_LIBRARY_NAME} PATHS ${NITE_BASE}/lib)
+ELSE()
+    FIND_LIBRARY(NITE_LIBRARY NAMES ${OPEN_LIBRARY_NAME} PATHS ${NITE_BASE}/Redist)
+ENDIF()
+
+IF(NOT NITE_LIBRARY)
+    # env is not set
+    MESSAGE("OPEN_NI_BASE should be set, for example:")
+    MESSAGE("> cmake -DOPEN_NI_BASE=/usr/lib/??? ..")
+ENDIF()
+
+SET(LIBS ${LIBS} ${NITE_LIBRARY})
+
+# openNI lib
+SET(OPEN_LIBRARY_NAME NiTE2)
 
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
